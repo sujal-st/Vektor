@@ -2,18 +2,28 @@ import React, { useState, useContext, useEffect, lazy, Suspense } from 'react'
 import 'react-range-slider-input/dist/style.css';
 import { categoryContext } from '~/contexts/categoryContext';
 import { filterContext } from '~/contexts/resetFilterContext';
+import type { ProductType } from '~/types';
 
 const RangeSlider = lazy(() => import('react-range-slider-input'));
-
-function PriceFilter() {
+type Props={
+    products: ProductType[];
+}
+function PriceFilter({products}:Props) {
     const [isOpen, setIsOpen] = useState(false);
     const { setCat } = useContext(categoryContext);
     const { priceRange, setPriceRange } = useContext(filterContext);
 
+    const maxPrice=products.length>0?
+        Math.ceil(Math.max(...products.map(p=>p.price)))
+        : 200000;
+
     const handleReset = () => {
-        setPriceRange([0, 200000]);
+        setPriceRange([0, maxPrice]);
     }
 
+    useEffect(()=>{
+        setPriceRange([0, maxPrice])
+    },[maxPrice])
     return (
         <>
             {/* Mobile toggle button */}
