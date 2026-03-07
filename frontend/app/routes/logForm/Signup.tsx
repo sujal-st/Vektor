@@ -2,28 +2,27 @@ import { IoMdClose } from 'react-icons/io'
 import { NavLink, redirect } from 'react-router'
 import FormComponent from '~/components/FormComponent'
 import type { Route } from './+types/Signup'
+console.log("API URL:", import.meta.env.VITE_API_URL)
 
-export async function action({request}:Route.ActionArgs){
+export async function action({ request }: Route.ActionArgs) {
     const formData = await request.formData();
 
     const userName = formData.get("userName");
     const email = formData.get("email");
     const password = formData.get("password");
-    console.log("API URL:", import.meta.env.VITE_API_URL)
-    const res= await fetch(`${import.meta.env.VITE_API_URL}/api/signup`,{
-        method:'POST',
-        headers:{
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/signup`, {
+        method: 'POST',
+        headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({userName,email, password})
+        body: JSON.stringify({ userName, email, password })
     });
 
-    const data= await res.json();
+    const data = await res.json();
 
-    if(!res.ok)
-    {
-        const errorMsg= Array.isArray(data.detail)?data.detail[0].msg:data.detail
-        return {error: errorMsg}
+    if (!res.ok) {
+        const errorMsg = Array.isArray(data.detail) ? data.detail[0].msg : data.detail
+        return { error: errorMsg }
     }
 
     return redirect("/login");
@@ -54,7 +53,7 @@ function Signup() {
                     </NavLink>
                 </div>
             </div>
-            <img src='/assets/icon1.png' className='w-1/2'/>
+            <img src='/assets/icon1.png' className='w-1/2' />
         </div>
 
     )
