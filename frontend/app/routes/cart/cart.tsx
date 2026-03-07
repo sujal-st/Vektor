@@ -78,7 +78,7 @@ function Cart() {
                                     onChange={() => handleSelect(p.id)}
                                     className='w-4 h-4 cursor-pointer'
                                 />
-                                <div className='flex-1'>
+                                <div className='flex flex-col'>
                                     <CartCard product={p} />
                                 </div>
                             </div>
