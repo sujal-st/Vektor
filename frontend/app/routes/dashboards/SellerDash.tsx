@@ -152,7 +152,7 @@ function SellerDash() {
     const totalRevenue = orders
         .flatMap(o => o.items)
         .filter(i => i.item_status !== 'cancelled')
-        .reduce((sum, i) => sum + i.price * 145 * i.quantity, 0)
+        .reduce((sum, i) => sum + i.price * i.quantity, 0)
 
     const pendingOrders = orders.filter(o =>
         o.items.some(i => i.item_status === 'pending')
