@@ -32,7 +32,7 @@ export async function action({ request }: Route.ActionArgs) {
 
 function Signup() {
     return (
-        <div className='w-full flex flex-row justify-between items-center gap-2 px-2 lg:pl-5'>
+        <div className='w-full flex flex-row justify-between items-center gap-2 px-5 lg:pl-5'>
             <div className='mt-6 w-full h-fit rounded-lg mx-auto p-8 flex flex-col gap-2 bg-white shadow-lg'>
                 <NavLink to="/" className="self-end">
                     <IoMdClose size={24} />

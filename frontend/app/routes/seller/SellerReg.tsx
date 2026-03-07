@@ -31,7 +31,7 @@ function SellerRegister() {
     const actionData = useActionData() as { error?: string };
 
     return (
-        <div className='w-full flex flex-row gap-2 pl-12'>
+        <div className='w-full flex flex-row justify-between items-center gap-2 px-5 lg:pl-5'>
             <div className='mt-6 rounded-lg w-full h-fit mx-auto p-8 flex flex-col gap-4 bg-white shadow-lg'>
                 <NavLink to="/" className="self-end">
                     <IoMdClose size={24} />
@@ -113,7 +113,7 @@ function SellerRegister() {
                     </NavLink>
                 </div>
             </div>
-            <img src='/assets/icon1.png' className='w-1/2' />
+            <img src='/assets/icon1.png' className='hidden lg:grid w-1/2' />
         </div>
     )
 }
