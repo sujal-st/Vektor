@@ -59,7 +59,7 @@ function cartCard({ product }: PropType) {
 
             {/* Top row — image + title + price */}
             <div className='flex items-start gap-3'>
-                <div className='w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0'>
+                <div className='w-16 h-16 sm:w-20 sm:h-20 shrink-0'>
                     <img
                         src={getImageUrl(product.img)}
                         alt={product.title}
