@@ -84,7 +84,7 @@ function UserDash() {
 
     const totalSpent = orders
         .filter(o => o.order_status !== 'cancelled')
-        .reduce((sum, o) => sum + o.total_price * 145, 0)
+        .reduce((sum, o) => sum + o.total_price, 0)
 
     const deliveredCount = orders.filter(o => o.order_status === 'delivered').length
     const pendingCount = orders.filter(o => o.order_status === 'pending').length
