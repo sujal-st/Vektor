@@ -316,24 +316,19 @@ h2 {
 }
 
 .grid-img1 {
-    color: #ECE2CD;
-    background: linear-gradient(0deg, rgba(111, 59, 0, 0.532) 0%, rgba(111, 60, 0, 0.40) 100%), url("assets/gaming-pc-build.png") lightgray 50% center / cover no-repeat;
-
+    background: linear-gradient(0deg, rgba(111, 59, 0, 0.532) 0%, rgba(111, 60, 0, 0.40) 100%), url("/assets/gaming-pc-build.png") lightgray 50% center / cover no-repeat;
 }
 
 .grid-img2 {
-    color: #ECE2CD;
-    background: linear-gradient(0deg, rgba(111, 59, 0, 0.532) 0%, rgba(111, 60, 0, 0.40) 100%), url("assets/gaming-pc-build2.jpg") lightgray 50% center/ cover no-repeat;
+    background: linear-gradient(0deg, rgba(111, 59, 0, 0.532) 0%, rgba(111, 60, 0, 0.40) 100%), url("/assets/gaming-pc-build2.jpg") lightgray 50% center/ cover no-repeat;
 }
 
 .grid-img3 {
-    color: #ECE2CD;
-    background: linear-gradient(0deg, rgba(111, 59, 0, 0.532) 0%, rgba(111, 60, 0, 0.40) 100%), url("assets/gaming-pc-build3.webp") lightgray 50% center/ cover no-repeat;
+    background: linear-gradient(0deg, rgba(111, 59, 0, 0.532) 0%, rgba(111, 60, 0, 0.40) 100%), url("/assets/gaming-pc-build3.webp") lightgray 50% center/ cover no-repeat;
 }
 
 .grid-img4 {
-    color: #ECE2CD;
-    background: linear-gradient(0deg, rgba(111, 59, 0, 0.532) 0%, rgba(111, 60, 0, 0.40) 100%), url("assets/gaming-pc-build4.png") lightgray 50% center/ cover no-repeat;
+    background: linear-gradient(0deg, rgba(111, 59, 0, 0.532) 0%, rgba(111, 60, 0, 0.40) 100%), url("/assets/gaming-pc-build4.png") lightgray 50% center/ cover no-repeat;
 }
 
 .small-btn {
