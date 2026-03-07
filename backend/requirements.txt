@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+pymongo
+motor
+pydantic[email]
+python-jose[cryptography]
+bcrypt
+python-dotenv
+pandas
+numpy
