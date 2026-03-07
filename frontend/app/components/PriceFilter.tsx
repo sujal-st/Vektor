@@ -27,10 +27,10 @@ function PriceFilter() {
 
             {/* Filter panel */}
             <div className={`
-                lg:py-12 lg:px-5 lg:rounded-sm lg:bg-white lg:min-w-[20%] lg:max-h-fit 
+                lg:py-12 lg:px-5 lg:rounded-sm lg:bg-white md:min-w-[20%] lg:max-h-fit 
                 lg:flex lg:flex-col lg:items-start lg:space-y-5 lg:sticky lg:top-20
                 ${isOpen ? 'flex' : 'hidden'} lg:flex
-                flex-col items-start gap-4 py-4 px-4 bg-white rounded-sm w-full
+                flex-col items-start gap-4 py-4 px-4 bg-white rounded-sm w-fit
             `}>
                 <h3 className='font-bold text-lg hidden md:block'>Filter By Price</h3>
                 <Suspense fallback={<div>Loading...</div>}>
