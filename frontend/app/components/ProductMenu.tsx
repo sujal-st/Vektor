@@ -20,7 +20,7 @@ function ProductMenu({ products }: Props) {
 
   const filteredProducts = products
     .filter((p) => cat === 'All' || p.category.toLowerCase() === cat.toLowerCase())
-    .filter((p) => p.price * 145 >= priceRange[0] && p.price * 145 <= priceRange[1])
+    .filter((p) => p.price>= priceRange[0] && p.price <= priceRange[1])
 
 
   const { currentPage, setCurrentPage } = useContext(paginationContext);
