@@ -22,6 +22,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 function products({loaderData}:Route.ComponentProps) {
   // console.log("loaderdata:"+typeof(loaderData))
   const products = loaderData?.products ?? [];
+  console.log(products)
   return (
     <section>
       <Categories />
