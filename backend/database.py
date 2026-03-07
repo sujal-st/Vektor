@@ -1,5 +1,9 @@
+import os
 from motor.motor_asyncio import AsyncIOMotorClient
+from dotenv import load_dotenv
 
-client = AsyncIOMotorClient('mongodb://localhost:27017')
-db=client.vektor
+load_dotenv()
 
+MONGO_URI = os.getenv("MONGO_URI")
+client = AsyncIOMotorClient(MONGO_URI)
+db = client["vektor"]
