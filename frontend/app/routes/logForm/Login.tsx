@@ -40,32 +40,32 @@ function Login() {
 
 
     return (
-        <div className='w-full flex flex-row gap-2 pl-12'>
+        <div className='w-full flex flex-row items-center justify-between gap-2 px-2 lg:pl-5'>
 
-            <div className='mt-6 rounded-lg w-full h-fit mx-auto p-8 flex flex-col gap-4 bg-white shadow-lg'>
-                <NavLink to="/" className="self-end">
-                    <IoMdClose size={24} />
-                </NavLink>
-                <div className='text-center flex flex-col gap-1 mb-2'>
-                    <img src="/Vektor.png" alt="" className='h-20 mx-auto' />
-                    <h1 className='text-2xl font-bold text-[#055D62]'>Get Started Now</h1>
-                    <p className='text-[#676767] text-sm mt-2'>Your custom PC build is waiting. Continue where you left off.</p>
-                </div>
-
-                <FormComponent type='login' />
-
-                <div className="text-center mt-6 text-sm text-[#676767]">
-                    Don't have an account?{" "}
-                    <NavLink
-                        to="/signup"
-                        className="text-[#AB2320] font-semibold hover:underline"
-                    >
-                        Sign Up
-                    </NavLink>
-                </div>
+        <div className='mt-6 rounded-lg w-full h-fit mx-auto p-8 flex flex-col gap-4 bg-white shadow-lg'>
+            <NavLink to="/" className="self-end">
+                <IoMdClose size={24} />
+            </NavLink>
+            <div className='text-center flex flex-col gap-1 mb-2'>
+                <img src="/Vektor.png" alt="" className='h-20 mx-auto' />
+                <h1 className='text-2xl font-bold text-[#055D62]'>Get Started Now</h1>
+                <p className='text-[#676767] text-sm mt-2'>Your custom PC build is waiting. Continue where you left off.</p>
             </div>
 
-            <img src='/assets/icon1.png' className='w-1/2' />
+            <FormComponent type='login' />
+
+            <div className="text-center mt-6 text-sm text-[#676767]">
+                Don't have an account?{" "}
+                <NavLink
+                    to="/signup"
+                    className="text-[#AB2320] font-semibold hover:underline"
+                >
+                    Sign Up
+                </NavLink>
+            </div>
+        </div>
+            
+            <img src='/assets/icon1.png' className='hidden lg:grid w-1/2'/>
 
         </div>
 
