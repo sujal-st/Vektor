@@ -70,7 +70,7 @@ function cartCard({ product }: PropType) {
                     <h3 className='text-base sm:text-lg font-bold line-clamp-1'>{product.title}</h3>
                     <span className='px-2 py-0.5 text-xs text-white font-semibold rounded-sm bg-[#00878f] w-fit'>{product.category}</span>
                     <span className='text-[#AB2320] text-base sm:text-lg font-bold'>
-                        Rs. {Math.ceil(product.price * 145 * quantity)}
+                        Rs. {Math.ceil(product.price * quantity)}
                     </span>
                 </div>
             </div>

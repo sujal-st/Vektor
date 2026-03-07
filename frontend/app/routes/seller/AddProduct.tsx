@@ -141,12 +141,13 @@ function AddProduct() {
 
                     <div className='grid grid-cols-2 gap-4'>
                         <div className='flex flex-col gap-1'>
-                            <label className='text-sm font-semibold text-gray-700'>Price (USD)</label>
+                            <label className='text-sm font-semibold text-gray-700'>Price (NRP)</label>
                             <input
                                 type='number'
                                 name='price'
                                 required
                                 min='0'
+                                max="99999999"
                                 step='0.01'
                                 placeholder='e.g. 299.99'
                                 className='border-[3px] border-white rounded bg-[#FAF8F4] shadow py-2 px-4 focus:border-[#AB2320] outline-none'
@@ -160,6 +161,7 @@ function AddProduct() {
                                 name='stock'
                                 required
                                 min='0'
+                                max='100'
                                 placeholder='e.g. 50'
                                 className='border-[3px] border-white rounded bg-[#FAF8F4] shadow py-2 px-4 focus:border-[#AB2320] outline-none'
                             />

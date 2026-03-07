@@ -190,7 +190,7 @@ function productdetails({ loaderData }: Route.ComponentProps) {
             <p className='text-base md:text-xl text-gray-500 line-clamp-2 md:line-clamp-1'>{product.description}</p>
           </div>
 
-          <p className='text-[#AB2320] font-semibold text-xl md:text-2xl'>Rs {Math.ceil(product.price * 145)}</p>
+          <p className='text-[#AB2320] font-semibold text-xl md:text-2xl'>Rs {Math.ceil(product.price)}</p>
 
           <div className='grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-5'>
             <button

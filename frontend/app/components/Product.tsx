@@ -44,7 +44,7 @@ function Product({ product }: PropType) {
                 <p className='text-md text-gray-500 line-clamp-2'>{product.description}</p>
                 <div className='flex justify-between'>
                     <span className='px-2 py-1 text-sm text-white font-semibold rounded-sm bg-[#00878f]'>{product.category}</span>
-                    <span className='rounded-sm text-[#AB2320] text-lg font-bold'>Rs. {Math.ceil(product.price * 145)}</span>
+                    <span className='rounded-sm text-[#AB2320] text-lg font-bold'>Rs. {Math.ceil(product.price)}</span>
                 </div>
                 <button className='px-4 py-2 bg-[#AB2320] text-[#F6F1E6] font-bold flex justify-center items-center gap-2 rounded-md cursor-pointer transition'
                     onClick={
