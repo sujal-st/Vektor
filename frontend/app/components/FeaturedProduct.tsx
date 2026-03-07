@@ -14,11 +14,11 @@ function FeaturedProduct({ products }: Props) {
   // Responsive products per page based on screen width
   const getProductsPerPage = () => {
     if (typeof window !== 'undefined') {
-      if (window.innerWidth < 640) return 1;   
-      if (window.innerWidth < 780) return 2;  
+      if (window.innerWidth < 640) return 1;
+      if (window.innerWidth < 780) return 2;
     }
-    return 4;  
-}
+    return 4;
+  }
 
   const [productsPerPage, setProductsPerPage] = useState(getProductsPerPage);
 
