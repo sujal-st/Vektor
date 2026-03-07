@@ -46,7 +46,7 @@ function PriceFilter({products}:Props) {
                 <Suspense fallback={<div>Loading...</div>}>
                     <RangeSlider
                         min={0}
-                        max={200000}
+                        max={maxPrice}
                         value={[priceRange[0], priceRange[1]]}
                         onInput={(values) => setPriceRange(values)}
                         ariaLabel={['Min', 'Max']}
