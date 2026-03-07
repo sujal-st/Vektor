@@ -290,7 +290,7 @@ function SellerDash() {
                                             <p className='text-gray-500 text-xs capitalize'>{product.category}</p>
                                             <div className='flex items-center gap-2 mt-0.5'>
                                                 <span className='text-[#AB2320] font-bold text-xs'>
-                                                    Rs. {Math.ceil(product.price * 145)}
+                                                    Rs. {Math.ceil(product.price)}
                                                 </span>
                                                 <span className={`text-xs font-semibold ${product.stock <= 5 ? 'text-red-500' : 'text-green-600'}`}>
                                                     {product.stock} in stock

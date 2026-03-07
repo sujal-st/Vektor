@@ -14,7 +14,7 @@ function Cart() {
     useEffect(() => {
         const total = cart
             .filter(p => selectedItems.includes(p.id))
-            .reduce((sum, p) => sum + p.price * 145 * p.quantity, 0);
+            .reduce((sum, p) => sum + p.price * p.quantity, 0);
         setTotalPrice(Math.ceil(total));
     }, [cart, selectedItems])
 
