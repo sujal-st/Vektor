@@ -24,13 +24,13 @@
     }
 
     .grid-icon-4 {
-        background: linear-gradient(0deg, rgba(111, 60, 0, 0.20) 0%, rgba(111, 60, 0, 0.20) 100%), url("/assets/img4.jpeg") center/cover no-repeat;
+        background: linear-gradient(0deg, rgba(111, 60, 0, 0.20) 0%, rgba(111, 60, 0, 0.20) 100%), url("/assets/img4.png") center/cover no-repeat;
         grid-column: 3/4;
         grid-row: 1/5;
     }
 
     .grid-icon-2 {
-        background: linear-gradient(0deg, rgba(111, 60, 0, 0.20) 0%, rgba(111, 60, 0, 0.20) 100%), url("/assets/img2.jpeg") center/cover no-repeat;
+        background: linear-gradient(0deg, rgba(111, 60, 0, 0.20) 0%, rgba(111, 60, 0, 0.20) 100%), url("/assets/img2.png") center/cover no-repeat;
     }
 
     .grid-icon-3 {

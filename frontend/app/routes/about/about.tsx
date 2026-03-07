@@ -40,8 +40,8 @@ export default function About() {
                 <div className="md:hidden grid grid-cols-2 gap-3 w-full">
                     {[
                         { img: 'img1.png' },
-                        { img: 'img4.jpeg' },
-                        { img: 'img2.jpeg' },
+                        { img: 'img4.png' },
+                        { img: 'img2.png' },
                         { img: 'img3.png' },
                     ].map((item, i) => (
                         <div
@@ -56,11 +56,11 @@ export default function About() {
             </section>
 
             {/* Mission Section */}
-            <section className='flex flex-col md:flex-row items-start gap-6 md:gap-[1.5rem] w-[90vw] md:w-[80vw] mx-auto my-10'>
+            <section className='flex flex-col items-start gap-6 md:gap-[1.5rem] w-[90vw] md:w-[80vw] mx-auto my-10'>
                 <div className="w-full md:w-auto">
                     <img src="/assets/img5.png" className='rounded-lg w-full object-cover' alt="PC Build station" />
                 </div>
-                <div className="w-full flex flex-col justify-center gap-4 md:gap-[2rem]">
+                <div className="w-full flex flex-col items-center gap-4">
                     <div>
                         <h2 className='text-2xl sm:text-3xl md:text-[3rem] font-semibold'>Our Mission</h2>
                         <h2 className='text-[#AB2320] text-2xl sm:text-3xl md:text-[3rem] font-semibold'>(Why We Exist)</h2>

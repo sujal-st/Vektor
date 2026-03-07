@@ -23,26 +23,26 @@ function Review() {
                 </h2>
 
                 {/* Desktop grid — uses your existing CSS classes */}
-                <div className="hidden lg:grid font-bold">
+                <div className="hidden lg:grid font-bold gap-2">
                     {[
-                        { title: "From Old PC to High-Performance Build", className: "grid-card flex flex-col justify-between grid-img1", button: true },
+                        { title: "From Old PC to High-Performance Build", className: "grid-card text-white flex flex-col justify-between grid-img1", button: true },
                         { title: "Customer Build Stories", className: "grid-card grid-title flex flex-row items-center text-center" },
                         { title: "Gaming Setup Upgrade", className: "grid-card-1 grid-wide flex flex-col", stars: stars },
 
                         { title: "Now My Games Run at Ultra Settings", className: "grid-card grid-title flex flex-row items-center text-center" },
-                        { title: "How I Built My Dream Gaming PC", className: "grid-card flex flex-col justify-between grid-img2", button: true },
+                        { title: "How I Built My Dream Gaming PC", className: "grid-card text-white flex flex-col justify-between grid-img2", button: true },
                         { title: "Performance Boost Success", className: "grid-card grid-title flex flex-row items-center text-center" },
 
-                        { title: "More Than Just Components", className: "grid-card flex flex-col justify-between grid-img3", button: true, stars: stars },
+                        { title: "More Than Just Components", className: "grid-card text-white flex flex-col justify-between grid-img3", button: true, stars: stars },
                         { title: "Customer Review Spotlight", className: "grid-card-1 grid-wide-1 flex flex-col", stars: stars },
 
-                        { title: "Finally a Store I Can Trust", className: "grid-card flex flex-col justify-between grid-img4", button: true },
+                        { title: "Finally a Store I Can Trust", className: "grid-card text-white flex flex-col justify-between grid-img4", button: true },
                         { title: "Power, Speed & Reliability", className: "grid-card grid-title flex flex-row items-center text-center" }
                     ].map((item, i) => (
                         <div key={i} className={item.className}>
                             <div className="grid-title">{item.title}</div>
                             {item.button && <button className="btn-primary small-btn">Read More</button>}
-                            {item.stars && <div className="star flex gap-1">{item.stars}</div>}
+                            {/* {item.stars && <div className="star flex gap-1">{item.stars}</div>} */}
                         </div>
                     ))}
                 </div>
