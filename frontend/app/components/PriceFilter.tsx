@@ -18,7 +18,7 @@ function PriceFilter() {
         <>
             {/* Mobile toggle button */}
             <button
-                className='md:hidden sticky top-10 h-fit w-full rounded-sm px-4 py-2 font-semibold bg-white border border-gray-200 flex justify-between items-center'
+                className='lg:hidden sticky top-10 h-fit w-full rounded-sm px-4 py-2 font-semibold bg-white border border-gray-200 flex justify-between items-center'
                 onClick={() => setIsOpen(!isOpen)}
             >
                 <span>Filter By Price</span>
@@ -27,9 +27,9 @@ function PriceFilter() {
 
             {/* Filter panel */}
             <div className={`
-                md:py-12 md:px-5 md:rounded-sm md:bg-white md:min-w-[20%] md:max-h-fit 
-                md:flex md:flex-col md:items-start md:space-y-5 md:sticky md:top-20
-                ${isOpen ? 'flex' : 'hidden'} md:flex
+                lg:py-12 lg:px-5 lg:rounded-sm lg:bg-white lg:min-w-[20%] lg:max-h-fit 
+                lg:flex lg:flex-col lg:items-start lg:space-y-5 lg:sticky lg:top-20
+                ${isOpen ? 'flex' : 'hidden'} lg:flex
                 flex-col items-start gap-4 py-4 px-4 bg-white rounded-sm w-full
             `}>
                 <h3 className='font-bold text-lg hidden md:block'>Filter By Price</h3>

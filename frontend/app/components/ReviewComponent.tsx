@@ -91,7 +91,7 @@ function ReviewComponent({ reviews, productId, hasPurchased }: reviewProps) {
                             ))}
                         </div>
 
-                        <div className='flex items-center gap-4'>
+                        <div className='flex items-end gap-4'>
                             <InputComponent
                                 type='text'
                                 name="review"  // ← was empty string

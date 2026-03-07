@@ -39,7 +39,7 @@ function ProductMenu({ products }: Props) {
   }, [cat])
 
   return (
-    <div className='flex flex-col gap-2'>
+    <div className=' px-5 lg:px-0 flex flex-col gap-2'>
       {currentProducts.length === 0 ? (<h2 className='font-bold text-2xl text-center mx-auto'>No Products Found</h2>) : (
 
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mx-2'>

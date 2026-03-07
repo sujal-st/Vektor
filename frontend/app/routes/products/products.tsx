@@ -23,7 +23,7 @@ function products({loaderData}:Route.ComponentProps) {
   return (
     <section>
       <Categories />
-      <div className='mt-4 flex flex-col md:flex-row gap-5'>
+      <div className='mt-4 flex flex-col lg:flex-row gap-5'>
         <PriceFilter />
         <ProductMenu products={products}/>
       </div>
