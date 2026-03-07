@@ -4,6 +4,7 @@ import {
     FaBox, FaTruck, FaClock, FaCheckCircle,
     FaTimesCircle, FaUser, FaPhone, FaMapMarkerAlt, FaArrowLeft
 } from 'react-icons/fa'
+import { getImageUrl } from '~/utils/getImageUrl'
 
 type OrderItem = {
     id: string
@@ -107,7 +108,7 @@ function OrderItemRow({ item, orderId }: { item: OrderItem, orderId: string }) {
     return (
         <div className='flex items-center gap-4 p-4 border border-gray-100 rounded-lg'>
             <img
-                src={`${import.meta.env.VITE_API_URL}${item.img}`}
+                src={getImageUrl(item.img)}
                 alt={item.title}
                 className='w-16 h-16 object-contain rounded bg-gray-100 p-1 flex-shrink-0'
             />

@@ -3,6 +3,7 @@ import { useLocation, useNavigate, redirect, useActionData } from 'react-router'
 import type { Route } from './+types/checkout'
 import type { CartType } from '~/types'
 import { FaTruck, FaLock, FaChevronDown, FaChevronUp } from 'react-icons/fa'
+import { getImageUrl } from '~/utils/getImageUrl'
 
 export async function action({ request }: Route.ActionArgs) {
     const formData = await request.formData();
@@ -208,7 +209,7 @@ function Checkout() {
                                 {items.map((item) => (
                                     <div key={item.id} className='flex items-center gap-3'>
                                         <img
-                                            src={`${import.meta.env.VITE_API_URL}${item.img}`}
+                                            src={getImageUrl(item.img)}
                                             alt={item.title}
                                             className='w-14 h-14 object-contain rounded bg-gray-100 p-1'
                                         />

@@ -9,6 +9,7 @@ import type { CartType } from '~/types';
 import { getToken } from '~/utils/getToken';
 import { saveCartTODB } from '~/utils/saveCartToDB';
 import ReviewComponent from '~/components/ReviewComponent';
+import { getImageUrl } from '~/utils/getImageUrl';
 
 
 
@@ -178,7 +179,7 @@ function productdetails({ loaderData }: Route.ComponentProps) {
       <section className='max-w-full mx-auto mt-10 p-5 flex flex-row items-start gap-16'>
 
         <div className='w-1/2'>
-          <img src={`${import.meta.env.VITE_API_URL}${product.img}`} alt={product.title} className='w-full h-full rounded-lg' />
+          <img src={getImageUrl(product.img)} alt={product.title} className='w-full h-full rounded-lg' />
         </div>
 
         <div className='w-full flex flex-col justify-evenly gap-7'>

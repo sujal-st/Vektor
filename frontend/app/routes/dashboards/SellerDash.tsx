@@ -5,6 +5,7 @@ import {
     FaUser, FaEnvelope, FaShoppingBag, FaPlus, FaChartLine,
     FaStore, FaEdit, FaTrash
 } from 'react-icons/fa'
+import { getImageUrl } from '~/utils/getImageUrl'
 
 type OrderItem = {
     id: string
@@ -280,7 +281,7 @@ function SellerDash() {
                                 {products.map((product) => (
                                     <div key={product.id} className='flex items-center gap-3 p-3 border border-gray-100 rounded-lg hover:border-gray-300 transition'>
                                         <img
-                                            src={`${import.meta.env.VITE_API_URL}${product.img}`}
+                                            src={getImageUrl(product.img)}
                                             alt={product.title}
                                             className='w-12 h-12 object-contain rounded bg-gray-100 p-1'
                                         />
@@ -364,7 +365,7 @@ function SellerDash() {
                                             {order.items.slice(0, 3).map((item) => (
                                                 <img
                                                     key={item.id}
-                                                    src={`${import.meta.env.VITE_API_URL}${item.img}`}
+                                                    src={getImageUrl(item.img)}
                                                     alt={item.title}
                                                     className='w-10 h-10 object-contain rounded bg-gray-100 p-1'
                                                 />

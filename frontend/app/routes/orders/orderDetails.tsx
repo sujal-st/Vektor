@@ -1,6 +1,7 @@
 import { useLoaderData, useNavigate } from 'react-router'
 import type { Route } from './+types/orderdetails'
 import { FaCheckCircle, FaTruck, FaBox, FaClock, FaTimesCircle } from 'react-icons/fa'
+import { getImageUrl } from '~/utils/getImageUrl'
 
 type OrderItem = {
     id: string
@@ -154,7 +155,7 @@ function OrderDetails() {
                             {order.items.map((item) => (
                                 <div key={item.id} className='flex items-center gap-4 pb-4 border-b last:border-0 last:pb-0'>
                                     <img
-                                        src={`${import.meta.env.VITE_API_URL}${item.img}`}
+                                        src={getImageUrl(item.img)}
                                         alt={item.title}
                                         className='w-16 h-16 object-contain rounded bg-gray-100 p-1'
                                     />

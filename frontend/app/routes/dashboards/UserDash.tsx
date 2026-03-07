@@ -1,6 +1,7 @@
 import { useLoaderData, useNavigate } from 'react-router'
 import type { Route } from './+types/userDash'
 import { FaBox, FaClock, FaCheckCircle, FaTruck, FaTimesCircle, FaUser, FaEnvelope, FaShoppingBag } from 'react-icons/fa'
+import { getImageUrl } from '~/utils/getImageUrl'
 
 type OrderItem = {
     id: string
@@ -211,7 +212,7 @@ function UserDash() {
                                             {order.items.slice(0, 3).map((item) => (
                                                 <img
                                                     key={item.id}
-                                                    src={`${import.meta.env.VITE_API_URL}${item.img}`}
+                                                    src={getImageUrl(item.img)}
                                                     alt={item.title}
                                                     className='w-12 h-12 object-contain rounded bg-gray-100 p-1'
                                                 />

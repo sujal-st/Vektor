@@ -5,6 +5,7 @@ import { cartContext } from '~/contexts/cartContext';
 import { getToken } from '~/utils/getToken';
 import { saveCartTODB } from '~/utils/saveCartToDB';
 import QuantityRange from './QuantityRange';
+import { getImageUrl } from '~/utils/getImageUrl';
 
 type PropType = {
     product: CartType;
@@ -66,7 +67,7 @@ function cartCard({ product }: PropType) {
 
                 <div className='flex items-start gap-5'>
                     <div className='w-20 h-20'>
-                        <img src={`http://localhost:8000${product.img}`} alt={product.title} className='w-full h-full object-contain' />
+                        <img src={getImageUrl(product.img)} alt={product.title} className='w-full h-full object-contain' />
                     </div>
                     <div>
                     <h3 className='text-lg font-bold line-clamp-1 '>{product.title}</h3>

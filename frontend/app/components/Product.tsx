@@ -4,6 +4,7 @@ import { FaShoppingCart } from 'react-icons/fa'
 import { cartContext } from '~/contexts/cartContext';
 import { getToken } from '~/utils/getToken';
 import { saveCartTODB } from '~/utils/saveCartToDB';
+import { getImageUrl } from '~/utils/getImageUrl';
 
 type PropType = {
     product: ProductType;
@@ -35,7 +36,7 @@ function Product({ product }: PropType) {
     return (
         <div className='min-w-20 p-5 min-h-50 bg-white rounded-sm shadow-sm flex flex-col justify-between gap-5 hover:scale-105 transition duration-200'>
             <div className='h-48 w-full overflow-hidden rounded-sm'>
-                <img src={`http://localhost:8000${product.img}`} alt={product.title} className='w-full h-full object-contain' />
+                <img src={getImageUrl(product.img)} alt={product.title} className='w-full h-full object-contain' />
             </div>
             <div className='flex flex-col space-y-5'>
 
