@@ -224,7 +224,7 @@ function UserDash() {
                                             )}
                                             <div className='ml-auto text-right'>
                                                 <p className='text-xs text-gray-500'>{order.items.length} item{order.items.length > 1 ? 's' : ''}</p>
-                                                <p className='font-bold text-[#AB2320]'>Rs. {Math.ceil(order.total_price * 145).toLocaleString()}</p>
+                                                <p className='font-bold text-[#AB2320]'>Rs. {Math.ceil(order.total_price).toLocaleString()}</p>
                                             </div>
                                         </div>
 

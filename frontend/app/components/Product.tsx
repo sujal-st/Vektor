@@ -1,33 +1,36 @@
-import React, { useContext} from 'react'
+import React, { useContext } from 'react'
 import type { CartType, ProductType } from '~/types'
 import { FaShoppingCart } from 'react-icons/fa'
 import { cartContext } from '~/contexts/cartContext';
 import { getToken } from '~/utils/getToken';
 import { saveCartTODB } from '~/utils/saveCartToDB';
 import { getImageUrl } from '~/utils/getImageUrl';
+import { useNavigate } from 'react-router';
 
 type PropType = {
     product: ProductType;
 }
 function Product({ product }: PropType) {
+    const navigate = useNavigate();
     const { cart, setCart } = useContext(cartContext);
     const handleAddToCart = async (e: React.MouseEvent) => {
         e.stopPropagation();
         e.preventDefault();
 
-        let updatedCart: CartType[];
+        const token = getToken();
+        if (!token) {
+            navigate("/login");
+            return;  // ← stop here
+        }
 
-        const existing = cart.find((p) => p.id === product.id ? true : false);
+        let updatedCart: CartType[];
+        const existing = cart.find((p) => p.id === product.id);
         if (existing) {
-            updatedCart = cart.filter((p) => p.id != product.id);
+            updatedCart = cart.filter((p) => p.id !== product.id);
+        } else {
+            updatedCart = [...cart, { ...product, quantity: 1 }];
         }
-        else {
-            updatedCart = [
-                ...cart,
-                { ...product, quantity: 1 }
-            ]
-        }
-        setCart(updatedCart)
+        setCart(updatedCart);
         await saveCartTODB(updatedCart);
     }
 
@@ -51,9 +54,10 @@ function Product({ product }: PropType) {
                         (e) => {
                             e.stopPropagation();
                             e.preventDefault();
-                            isInCart? 
-                            removeFromCart(product.id, getToken())
-                            : handleAddToCart(e)
+                            
+                            isInCart ?
+                                removeFromCart(product.id, getToken())
+                                : handleAddToCart(e)
                         }}>
                     <FaShoppingCart />
                     {isInCart ? 'Remove From Cart' : 'Add To Cart'}
