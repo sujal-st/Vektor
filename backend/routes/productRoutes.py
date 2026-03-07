@@ -7,8 +7,17 @@ from dotenv import load_dotenv
 import os
 import shutil
 from datetime import datetime
+import cloudinary
+import cloudinary.uploader
+
 
 load_dotenv()
+
+cloudinary.config(
+    cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.getenv("CLOUDINARY_API_KEY"),
+    api_secret=os.getenv("CLOUDINARY_API_SECRET")
+)
 
 router = APIRouter()
 security = HTTPBearer()
@@ -16,6 +25,19 @@ JWT_SECRET = os.getenv("JWT_SECRET")
 
 UPLOAD_DIR = "uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
+
+def save_image(img) -> str:
+    if os.getenv("CLOUDINARY_CLOUD_NAME"):
+        # production — upload to Cloudinary
+        result = cloudinary.uploader.upload(img.file)
+        return result["secure_url"]
+    else:
+        # local — save to uploads folder
+        filename = f"{int(datetime.now().timestamp())}-{img.filename}"
+        file_path = os.path.join(UPLOAD_DIR, filename)
+        with open(file_path, "wb") as buffer:
+            shutil.copyfileobj(img.file, buffer)
+        return f"/uploads/{filename}"
 
 
 # helper to format product
@@ -94,8 +116,6 @@ async def get_product_by_id(id: str):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-
-
 # create product (admin only)
 @router.post("/products")
 async def create_product(
@@ -106,14 +126,10 @@ async def create_product(
     img: UploadFile = File(...),
     featured: bool = Form(False),
     stock: int = Form(...),
-    admin=Depends(get_current_admin)  # ← protects route
+    admin=Depends(get_current_admin)
 ):
     try:
-        filename = f"{int(datetime.now().timestamp())}-{img.filename}"
-        file_path = os.path.join(UPLOAD_DIR, filename)
-
-        with open(file_path, "wb") as buffer:
-            shutil.copyfileobj(img.file, buffer)
+        img_url = save_image(img)
 
         product = {
             "title": title,
@@ -122,14 +138,13 @@ async def create_product(
             "category": category,
             "stock": stock,
             "featured": featured,
-            "img": f"/uploads/{filename}",
-            "admin_id": admin["id"]  # ← link product to admin
+            "img": img_url,
+            "admin_id": admin["id"]
         }
 
         result = await db.products.insert_one(product)
-
-        product["id"]= str(result.inserted_id)
-        product.pop("_id",None)
+        product["id"] = str(result.inserted_id)
+        product.pop("_id", None)
         return {
             "message": "Product added",
             "product": {**product, "id": str(result.inserted_id)}
@@ -144,9 +159,7 @@ async def create_product(
 # delete product (admin only - can only delete their own products)
 @router.delete("/products/{id}")
 async def delete_product(id: str, admin=Depends(get_current_admin)):
-
     try:
-        # make sure the product belongs to this admin
         product = await db.products.find_one({"_id": ObjectId(id)})
 
         if not product:
@@ -166,7 +179,8 @@ async def delete_product(id: str, admin=Depends(get_current_admin)):
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-    
+
+
 @router.put("/products/{id}")
 async def update_product(
     id: str,
@@ -176,7 +190,7 @@ async def update_product(
     category: str = Form(...),
     featured: bool = Form(False),
     stock: int = Form(...),
-    img: UploadFile = File(None),  # ← optional, only if changing image
+    img: UploadFile = File(None),
     admin=Depends(get_current_admin)
 ):
     try:
@@ -198,11 +212,7 @@ async def update_product(
 
         # only update image if a new one was uploaded
         if img and img.filename:
-            filename = f"{int(datetime.now().timestamp())}-{img.filename}"
-            file_path = os.path.join(UPLOAD_DIR, filename)
-            with open(file_path, "wb") as buffer:
-                shutil.copyfileobj(img.file, buffer)
-            updated_fields["img"] = f"/uploads/{filename}"
+            updated_fields["img"] = save_image(img)  # ← uses save_image now
 
         await db.products.update_one(
             {"_id": ObjectId(id)},
