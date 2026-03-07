@@ -71,7 +71,7 @@ function Cart() {
                                     type='checkbox'
                                     checked={selectedItems.includes(p.id)}
                                     onChange={() => handleSelect(p.id)}
-                                    className='w-4 h-4 cursor-pointer mt-5 flex-shrink-0'
+                                    className='w-4 h-4 cursor-pointer bg-[#AB2320] mt-5 flex-shrink-0'
                                 />
                                 <div className='flex-1 min-w-0'>
                                     <CartCard product={p} />
