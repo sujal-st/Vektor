@@ -81,7 +81,7 @@ function Checkout() {
     }
 
     const totalPrice = Math.ceil(
-        items.reduce((sum, p) => sum + p.price * 145 * p.quantity, 0)
+        items.reduce((sum, p) => sum + p.price * p.quantity, 0)
     );
 
     return (
@@ -218,7 +218,7 @@ function Checkout() {
                                             <p className='text-gray-500 text-sm'>Qty: {item.quantity}</p>
                                         </div>
                                         <span className='font-bold text-[#AB2320] text-sm'>
-                                            Rs. {Math.ceil(item.price * 145 * item.quantity)}
+                                            Rs. {Math.ceil(item.price * item.quantity)}
                                         </span>
                                     </div>
                                 ))}
