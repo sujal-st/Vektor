@@ -3,6 +3,7 @@ import type { Route } from './+types/EditProduct'
 import { FaStore, FaImage } from 'react-icons/fa'
 import { useRef, useState } from 'react'
 import type { ProductType } from '~/types'
+import { getImageUrl } from '~/utils/getImageUrl'
 
 export async function loader({ request, params }: Route.LoaderArgs) {
     const res = await fetch(`${import.meta.env.VITE_API_URL}/api/products/${params.id}`);
@@ -101,7 +102,7 @@ function EditProduct() {
                         <div className='mb-4'>
                             <p className='text-sm text-gray-500 mb-2'>Current Image</p>
                             <img
-                                src={`${import.meta.env.VITE_API_URL}${product.img}`}
+                                src={getImageUrl(product.img)}
                                 alt={product.title}
                                 className='h-40 object-contain rounded bg-gray-100 p-2'
                             />

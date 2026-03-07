@@ -19,7 +19,9 @@ export async function action({ request }: Route.ActionArgs) {
     const featured = formData.get('featured') === 'true' ? 'true' : 'false'
     formData.set('featured', featured)  // ← override with explicit value
 
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/products`, {
+    const apiUrl = import.meta.env.VITE_API_URL || process.env.VITE_API_URL;
+
+    const res = await fetch(`${apiUrl}/api/products`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
         body: formData

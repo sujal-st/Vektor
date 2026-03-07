@@ -7,12 +7,14 @@ import type { ProductType } from '~/types';
 
 export async function loader({ request }: Route.LoaderArgs) {
   try {
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/products`);
+    const apiUrl = import.meta.env.VITE_API_URL || process.env.VITE_API_URL;
+    if (!apiUrl) throw new Error("API URL not configured");
+    const res = await fetch(`${apiUrl}/api/products`);
     if (!res.ok) throw new Error("Failed to fetch data");
-    const data: ProductType[]= await res.json();
-    console.log("data"+data)
+    const data: ProductType[] = await res.json();
     return { products: data };
   } catch (err) {
+    console.error("Products loader error:", err);
     return { products: [] as ProductType[] };
   }
 }

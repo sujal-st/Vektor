@@ -170,11 +170,11 @@ function OrderDetails() {
                                     </div>
                                     <div className='text-right'>
                                         <p className='font-bold text-[#AB2320]'>
-                                            Rs. {Math.ceil(item.price * 145 * item.quantity)}
+                                            Rs. {Math.ceil(item.price * item.quantity)}
                                         </p>
                                         <p className='text-gray-500 text-sm'>Qty: {item.quantity}</p>
                                         <p className='text-gray-400 text-xs'>
-                                            Rs. {Math.ceil(item.price * 145)} each
+                                            Rs. {Math.ceil(item.price)} each
                                         </p>
                                     </div>
                                 </div>
@@ -185,7 +185,7 @@ function OrderDetails() {
                         <div className='mt-4 pt-4 border-t flex flex-col gap-2'>
                             <div className='flex justify-between text-gray-500'>
                                 <span>Subtotal</span>
-                                <span>Rs. {Math.ceil(order.total_price * 145)}</span>
+                                <span>Rs. {Math.ceil(order.total_price)}</span>
                             </div>
                             <div className='flex justify-between text-gray-500'>
                                 <span>Shipping</span>
@@ -193,7 +193,7 @@ function OrderDetails() {
                             </div>
                             <div className='flex justify-between font-bold text-lg'>
                                 <span>Total</span>
-                                <span className='text-[#AB2320]'>Rs. {Math.ceil(order.total_price * 145)}</span>
+                                <span className='text-[#AB2320]'>Rs. {Math.ceil(order.total_price)}</span>
                             </div>
                         </div>
                     </div>
