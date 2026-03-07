@@ -44,7 +44,7 @@ export async function loader({ request, params }: Route.LoaderArgs) {
     if (!user.is_admin) return { order: null, error: 'Access denied', sellerId: null };
 
     const res = await fetch(`${import.meta.env.VITE_API_URL}/api/orders/seller/${params.id}`, {
-        //                                                              ↑ use seller route
+       
         headers: { Authorization: `Bearer ${token}` }
     });
 
@@ -118,7 +118,7 @@ function OrderItemRow({ item, orderId }: { item: OrderItem, orderId: string }) {
                 <p className='text-gray-500 text-sm capitalize'>{item.category}</p>
                 <div className='flex items-center gap-3 mt-1'>
                     <span className='text-[#AB2320] font-bold text-sm'>
-                        Rs. {Math.ceil(item.price * 145 * item.quantity)}
+                        Rs. {Math.ceil(item.price * item.quantity)}
                     </span>
                     <span className='text-gray-400 text-xs'>Qty: {item.quantity}</span>
                 </div>
@@ -188,7 +188,7 @@ function SellerOrderDetails() {
 
     const myRevenue = myItems
         .filter(i => i.item_status !== 'cancelled')
-        .reduce((sum, i) => sum + i.price * 145 * i.quantity, 0)
+        .reduce((sum, i) => sum + i.price * i.quantity, 0)
 
     return (
         <section className='max-w-4xl mx-auto p-5 mt-5'>
