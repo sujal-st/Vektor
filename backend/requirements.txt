@@ -6,5 +6,6 @@ pydantic[email]
 python-jose[cryptography]
 bcrypt
 python-dotenv
+python-multipart
 pandas
 numpy
