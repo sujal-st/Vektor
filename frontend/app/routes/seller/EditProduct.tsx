@@ -6,12 +6,14 @@ import type { ProductType } from '~/types'
 import { getImageUrl } from '~/utils/getImageUrl'
 
 export async function loader({ request, params }: Route.LoaderArgs) {
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/products/${params.id}`);
+    const apiUrl = import.meta.env.VITE_API_URL || process.env.VITE_API_URL;
+    const res = await fetch(`${apiUrl}/api/products/${params.id}`);
     if (!res.ok) return { product: null };
     const product: ProductType = await res.json();
     return { product };
 }
 
+// action
 export async function action({ request, params }: Route.ActionArgs) {
     const formData = await request.formData();
 
@@ -26,7 +28,8 @@ export async function action({ request, params }: Route.ActionArgs) {
     const featured = formData.get('featured') === 'true' ? 'true' : 'false';
     formData.set('featured', featured);
 
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/products/${params.id}`, {
+    const apiUrl = import.meta.env.VITE_API_URL || process.env.VITE_API_URL;
+    const res = await fetch(`${apiUrl}/api/products/${params.id}`, {
         method: 'PUT',
         headers: { Authorization: `Bearer ${token}` },
         body: formData
