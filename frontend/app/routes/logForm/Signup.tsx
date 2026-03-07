@@ -9,7 +9,7 @@ export async function action({request}:Route.ActionArgs){
     const userName = formData.get("userName");
     const email = formData.get("email");
     const password = formData.get("password");
-
+    console.log("API URL:", import.meta.env.VITE_API_URL)
     const res= await fetch(`${import.meta.env.VITE_API_URL}/api/signup`,{
         method:'POST',
         headers:{

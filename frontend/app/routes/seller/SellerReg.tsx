@@ -10,7 +10,7 @@ export async function action({ request }: Route.ActionArgs) {
     const email = formData.get('email');
     const password = formData.get('password');
     const admin_secret = formData.get('admin_secret');
-
+    console.log("API URL:", import.meta.env.VITE_API_URL)
     const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
