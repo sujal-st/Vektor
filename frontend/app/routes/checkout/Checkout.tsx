@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate, redirect, useActionData } from 'react-router'
-import type { Route } from './+types/checkout'
+import type { Route } from './+types/Checkout'
 import type { CartType } from '~/types'
 import { FaTruck, FaLock, FaChevronDown, FaChevronUp } from 'react-icons/fa'
 import { getImageUrl } from '~/utils/getImageUrl'
+import { toast } from 'sonner'
 
 export async function action({ request }: Route.ActionArgs) {
     const formData = await request.formData();
@@ -15,6 +16,29 @@ export async function action({ request }: Route.ActionArgs) {
         ?.split('=')[1];
 
     if (!token) return { error: 'Login required to place an order' };
+
+    const stringReg = /^[A-Za-z\s]+$/;
+    const phoneReg = /^\d{10}$/;
+
+    const full_name = formData.get("full_name") as string;
+    const city = formData.get("city") as string;
+    const address = formData.get("address") as string;
+    const phone = formData.get("phone") as string;
+
+    if (!stringReg.test(full_name)) {
+        return { error: "Full Name must contain only letters and spaces." };
+    }
+
+    if (!stringReg.test(city)) {
+        return { error: "City must contain only letters and spaces." };
+    }
+
+    if (!phoneReg.test(phone)) {
+        return { error: "Phone number must be exactly 10 digits." };
+    }
+    if(!stringReg.test(address)){
+        return { error: "Address must be at least 5 characters long." };
+    }
 
     const rawItems = JSON.parse(formData.get('items') as string);
 
@@ -28,6 +52,7 @@ export async function action({ request }: Route.ActionArgs) {
         quantity: item.quantity,
         admin_id: item.admin_id ?? null
     }));
+
 
     const shipping_info = {
         full_name: formData.get('full_name'),
@@ -58,12 +83,52 @@ export async function action({ request }: Route.ActionArgs) {
 }
 
 function Checkout() {
+    const [fullName, setFullName] = useState("");
     const location = useLocation();
     const navigate = useNavigate();
-    const items: CartType[] = location.state?.items ?? [];
-    const actionData = useActionData() as { error?:string }
+    const stateItems = (location.state as { items?: CartType[] } | null)?.items ?? [];
+    const [items, setItems] = useState<CartType[]>(stateItems);
+    const actionData = useActionData() as { error?: string }
 
     const [orderSummaryOpen, setOrderSummaryOpen] = useState(true);
+
+    useEffect(() => {
+        if (stateItems.length > 0) {
+            setItems(stateItems);
+            sessionStorage.setItem('checkout_items', JSON.stringify(stateItems));
+            return;
+        }
+
+        const storedItems = sessionStorage.getItem('checkout_items');
+        if (!storedItems) {
+            setItems([]);
+            return;
+        }
+
+        try {
+            const parsed = JSON.parse(storedItems);
+            setItems(Array.isArray(parsed) ? parsed : []);
+        } catch {
+            setItems([]);
+        }
+    }, [stateItems]);
+
+    useEffect(() => {
+        if (actionData?.error) {
+            toast.error(actionData.error);
+        }
+    }, [actionData]);
+
+    useEffect(() => {
+        const cookies = document.cookie
+            .split("; ")
+            .find(row => row.startsWith("user="));
+
+        if (cookies) {
+            const user = JSON.parse(decodeURIComponent(cookies.split("=")[1]));
+            setFullName(user.userName);
+        }
+    }, []);
 
     if (items.length === 0) {
         return (
@@ -112,6 +177,8 @@ function Checkout() {
                                     type='text'
                                     name='full_name'
                                     required
+                                    value={fullName}
+                                    onChange={(e) => setFullName(e.target.value)}
                                     placeholder='John Doe'
                                     className='border-[3px] border-white rounded bg-[#FAF8F4] shadow py-2 px-4 focus:border-[#AB2320] outline-none'
                                 />

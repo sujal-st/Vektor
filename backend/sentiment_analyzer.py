@@ -46,7 +46,7 @@ def load_and_clean_data(filepath):
     df['review_sentiment'] = df['review_sentiment'].str.lower().str.strip()
 
     # FIX 2: use random sample instead of head() so all classes are represented
-    df = df.sample(175900, random_state=42)
+    df = df.sample(50000, random_state=42)
 
     # balance classes (alternative approach)
     min_count = df['review_sentiment'].value_counts().min()
@@ -336,12 +336,72 @@ def classify_unlabeled(model, unlabeled_reviews, idf):
 
 
 # ─────────────────────────────────────────────
+# GLOBAL CACHED MODEL
+# ─────────────────────────────────────────────
+_cached_model = None
+_cached_idf = None
+
+
+def get_trained_model():
+    """
+    Lazy-load and cache the trained sentiment analysis model.
+    First call trains the model (30-60 seconds).
+    Subsequent calls return cached model (<200ms).
+    
+    Returns:
+        tuple: (trained_model, idf_dict)
+    """
+    global _cached_model, _cached_idf
+    
+    if _cached_model is not None and _cached_idf is not None:
+        return _cached_model, _cached_idf
+    
+    print("Training sentiment model (first time - this takes 30-60 seconds)...")
+    
+    # Load training data from backend/data/electronics_review_sentiment.csv
+    csv_path = os.path.join(os.path.dirname(__file__), 'data/electronics_review_sentiment.csv')
+    df = load_and_clean_data(csv_path)
+    
+    # Split dataset
+    train_df, test_df = split_dataset(df)
+    
+    # Calculate IDF
+    idf = calculate_idf(train_df)
+    
+    # Train model
+    model = NaiveBayesSentiment()
+    model.train(train_df, idf)
+    
+    # Cache globally
+    _cached_model = model
+    _cached_idf = idf
+    
+    print("Model trained and cached successfully!")
+    return _cached_model, _cached_idf
+
+
+def classify_review(review_text):
+    """
+    Classify a single review text.
+    
+    Args:
+        review_text (str): The review text to classify
+    
+    Returns:
+        str: Sentiment label ('positive', 'negative', or 'neutral')
+    """
+    model, idf = get_trained_model()
+    cleaned = clean_text(review_text)
+    return model.predict(cleaned, idf)
+
+
+# ─────────────────────────────────────────────
 # MAIN
 # ─────────────────────────────────────────────
 if __name__ == '__main__':
 
     # 1. Load and clean
-    df = load_and_clean_data('electronics_review_sentiment.csv')
+    df = load_and_clean_data('backend/data/electronics_review_sentiment.csv')
 
     # 2. Split
     train_df, test_df = split_dataset(df)

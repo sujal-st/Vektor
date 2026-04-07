@@ -13,6 +13,7 @@ export default [
         route('dashboard', './routes/dashboards/UserDash.tsx'),
         route('seller/dashboard', './routes/dashboards/SellerDash.tsx'),
         route('seller/add-product', './routes/seller/AddProduct.tsx'),
+        route('seller/dashboard/products-analysis/:id', './routes/seller/ProductAnalysis.tsx'),
         route('seller/orders/:id', './routes/seller/OrderDetail.tsx'),
         route('seller/edit-product/:id', './routes/seller/EditProduct.tsx'),
     ]),

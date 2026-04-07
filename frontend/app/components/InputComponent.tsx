@@ -7,7 +7,7 @@ type InputPropType = {
     className: string;
 }
 
-function InputComponent({ type, name, placeholder, className="" }: InputPropType) {
+function InputComponent({ type, name, placeholder, className=" " }: InputPropType) {
     const capitalize = (str: string) => {
         if (!str) return "";
         return str[0].toUpperCase() + str.slice(1);

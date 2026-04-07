@@ -2,14 +2,27 @@ import { IoMdClose } from 'react-icons/io'
 import { NavLink, redirect } from 'react-router'
 import FormComponent from '~/components/FormComponent'
 import type { Route } from './+types/Signup'
-console.log("API URL:", import.meta.env.VITE_API_URL)
+import { toast } from 'sonner'
 
 export async function action({ request }: Route.ActionArgs) {
+
+    const emailReg=/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;;
+    const pwReg=/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
+
     const formData = await request.formData();
 
-    const userName = formData.get("userName");
+    const userName = formData.get("fullname");
     const email = formData.get("email");
     const password = formData.get("password");
+
+
+    if(!emailReg.test(email as string)){
+        return {error: "Please enter a valid email"};
+    }
+    else if(!pwReg.test(password as string)){
+        return { error: "Password must have at least 1 lowercase, 1 uppercase, 1 number, and 1 special character (@$!%*?&)" };
+    }
+
     const res = await fetch(`${import.meta.env.VITE_API_URL}/api/signup`, {
         method: 'POST',
         headers: {

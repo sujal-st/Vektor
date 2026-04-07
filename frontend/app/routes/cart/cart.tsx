@@ -35,6 +35,7 @@ function Cart() {
     const handleCheckout = () => {
         if (selectedItems.length === 0) return;
         const itemsToOrder = cart.filter(p => selectedItems.includes(p.id));
+        sessionStorage.setItem('checkout_items', JSON.stringify(itemsToOrder));
         navigate('/checkout', { state: { items: itemsToOrder } });
     }
 

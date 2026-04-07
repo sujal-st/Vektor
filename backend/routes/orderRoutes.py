@@ -117,7 +117,31 @@ async def save_order(order: OrderSchema, user=Depends(get_current_user)):
         new_order["id"] = str(result.inserted_id)
         del new_order["_id"]
 
-        await db.carts.delete_one({"user_id": user["id"]})
+        existing_cart = await db.carts.find_one({"user_id": user["id"]})
+        if existing_cart:
+            ordered_items = {item.id: item.quantity for item in order.items}
+            remaining_items = []
+
+            for cart_item in existing_cart.get("items", []):
+                cart_item_id = cart_item.get("id")
+                ordered_quantity = ordered_items.get(cart_item_id, 0)
+
+                if ordered_quantity <= 0:
+                    remaining_items.append(cart_item)
+                    continue
+
+                remaining_quantity = cart_item.get("quantity", 0) - ordered_quantity
+                if remaining_quantity > 0:
+                    cart_item["quantity"] = remaining_quantity
+                    remaining_items.append(cart_item)
+
+            if remaining_items:
+                await db.carts.update_one(
+                    {"user_id": user["id"]},
+                    {"$set": {"items": remaining_items, "updated_at": datetime.utcnow()}}
+                )
+            else:
+                await db.carts.delete_one({"user_id": user["id"]})
 
         return {"message": "Order placed successfully", "order": new_order}
 

@@ -17,6 +17,8 @@ import type { CartType } from "./types";
 import { useLoaderData } from "react-router";
 import { useEffect } from "react";
 import { cookieContext, CookieProvider } from "./contexts/cookieContext";
+import { Toaster } from 'sonner'
+
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -103,6 +105,7 @@ export default function App() {
     <CookieProvider>
     <CartProvider initialCart={cart} >
       <AppInner />
+      <Toaster position='top-right' theme='light'/>
     </CartProvider>
     </CookieProvider>
   );

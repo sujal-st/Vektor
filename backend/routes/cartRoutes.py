@@ -100,7 +100,7 @@ async def remove_from_cart(item_id: str, user_id: str = Depends(get_current_user
     if not cart:
         raise HTTPException(status_code=404, detail="Cart not found")
 
-    updated_items = [item for item in cart["items"] if item["id"]!=item_id]
+    updated_items = [item for item in cart["items"] if item["_id"]!=item_id]
 
     if len(updated_items)== len(cart["items"]):
         raise HTTPException(status_code=404, detail="Item not found in cart")

@@ -92,6 +92,8 @@ unique_words=get_unique_words()
 def calculate_tf(words):
     tf = {}
     total_words = len(words)
+    if total_words == 0:
+        return tf
     for word in words:
         if word not in tf:
             tf[word] = 0
@@ -106,95 +108,99 @@ reviews_dataset['tf'] = reviews_dataset['cleaned'].apply(calculate_tf)
 
 
 def calculate_idf():
+    # count how many reviews each word appears in
+    doc_count = defaultdict(int)
+    
+    for words in reviews_dataset['cleaned']:
+        unique_in_review = set(words)  # avoid counting duplicates in same review
+        for word in unique_in_review:
+            doc_count[word] += 1
+    
+    # calculate idf for each word
     idf = {}
     for word in unique_words:
-        # count how many reviews contain this word
-        doc_count = 0
-        for words in reviews_dataset['cleaned']:
-            if word in words:
-                doc_count += 1
-        # idf formula
-        idf[word] = math.log(total_reviews / (doc_count + 1))  # +1 to avoid division by zero
+        idf[word] = math.log(total_reviews / (doc_count[word] + 1))
+    
     return idf
 
 idf = calculate_idf()
+print(f"IDF calculated for {len(idf)} words")
 
-def calculate_idf():
-    idf = {}
-    for word in unique_words:
-        doc_count = sum(1 for words in reviews_dataset['cleaned'] if word in words)
-        idf[word] = math.log(total_reviews / (doc_count + 1))
-    return idf
-print(reviews_dataset['tfidf'].iloc[0])
+# compute tfidf per review
+def calculate_tfidf(tf_row):
+    tfidf = {}
+    for word, tf_val in tf_row.items():
+        tfidf[word] = tf_val * idf.get(word, 0)
+    return tfidf
 
-# random.seed(42)
-# indices = list(range(len(reviews_dataset)))
-# random.shuffle(indices)
-# split = int(0.8*len(indices))
-# train_idx= indices[:split]
-# test_idx = indices[split:]
-# train= reviews_dataset.iloc[train_idx]
-# test= reviews_dataset.iloc[test_idx]
+# apply tfidf to each row
+reviews_dataset['tfidf'] = reviews_dataset['tf'].apply(calculate_tfidf)
+
+random.seed(42)
+indices = list(range(len(reviews_dataset)))
+random.shuffle(indices)
+split = int(0.8*len(indices))
+train_idx= indices[:split]
+test_idx = indices[split:]
+train= reviews_dataset.iloc[train_idx]
+test= reviews_dataset.iloc[test_idx]
 
 
 # # algorithm of naive bayes
 
-# class NaiveBayes:
-#     def __init__(self):
-#         self.class_probs ={}
-#         self.word_probs={}
-#         self.vocab= set()
+class NaiveBayes:
+    def __init__(self):
+        self.class_probs = {}
+        self.word_probs = {}
+        self.vocab = set()
 
-#     def train(self, X, y):
-#         total_docs= len(y)
-#         classes = y.unique()
+    def train(self, X_words, X_tfidf, y):
+        total_docs = len(y)
+        classes = y.unique()
 
-#         word_counts={}
-#         class_counts={}
+        word_scores = {}
+        class_counts = {}
 
-#         for c in classes:
-#             class_counts[c]=0
-#             word_counts[c]= defaultdict(int)
+        for c in classes:
+            class_counts[c] = 0
+            word_scores[c] = defaultdict(float)
 
-#         for words, label in zip(X, y):
-#             class_counts[label]+=1
-#             for word in words:
-#                 word_counts[label][word]+=1
-#                 self.vocab.add(word)
-        
-#         vocab_size = len(self.vocab)
+        for words, tfidf_row, label in zip(X_words, X_tfidf, y):
+            class_counts[label] += 1
+            for word, score in tfidf_row.items():
+                word_scores[label][word] += score
+                self.vocab.add(word)
 
-#         for c in classes:
-#             self.class_probs[c]=math.log(class_counts[c]/total_docs)
+        vocab_size = len(self.vocab)
 
-#         self.word_probs={}
-#         for c in classes:
-#             self.word_probs[c] = {}
-#             total_words = sum(word_counts[c].values())
-#             for word in self.vocab:
-#                 count = word_counts[c].get(word, 0)
-#                 # laplace smoothing: add 1 to avoid zero probability
-#                 self.word_probs[c][word] = math.log((count + 1) / (total_words + vocab_size))
+        for c in classes:
+            self.class_probs[c] = math.log(class_counts[c] / total_docs)
 
-#     def predict(self, words):
-#         scores = {}
-#         for c, class_prob in self.class_probs.items():
-#             scores[c] = class_prob
-#             for word in words:
-#                 if word in self.vocab:
-#                     scores[c] += self.word_probs[c][word]
-#         print(f'Total positive reviews:{len(class_prob)}')
-#         return max(scores, key=scores.get)
+        for c in classes:
+            self.word_probs[c] = {}
+            total_score = sum(word_scores[c].values())
+            for word in self.vocab:
+                score = word_scores[c].get(word, 0)
+                self.word_probs[c][word] = math.log((score + 1) / (total_score + vocab_size))
 
-# model = NaiveBayes()
-# model.train(train['cleaned'], train['review_sentiment'])
+    def predict(self, words):
+        scores = {}
+        for c, class_prob in self.class_probs.items():
+            scores[c] = class_prob
+            for word in words:
+                if word in self.vocab:
+                    scores[c] += self.word_probs[c][word]
+        return max(scores, key=scores.get)
 
-# test['predicted']=test['cleaned'].apply(model.predict)
+# train with tfidf
+model = NaiveBayes()
+model.train(train['cleaned'], train['tfidf'], train['review_sentiment'])
 
-# correct=sum(test['predicted']==test['review_sentiment'])
-# accuracy=correct/len(test)*100
-# print(f'Accuracy:{accuracy:2f}%')
-# # print(reviews_dataset.dtypes)
-# # print(reviews_dataset['rating'].unique)
+# predict
+test['predicted'] = test['cleaned'].apply(model.predict)
+correct=sum(test['predicted']==test['review_sentiment'])
+accuracy=correct/len(test)*100
+print(f'Accuracy:{accuracy:2f}%')
+# print(reviews_dataset['rating'].unique)
 
 

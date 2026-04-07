@@ -24,6 +24,7 @@ type reviewProps = {
 function ReviewComponent({ reviews, productId, hasPurchased }: reviewProps) {
     const [selectedRating, setSelectedRating] = useState(0);
     const actionData = useActionData() as { reviewError?: string, reviewSuccess?: boolean };
+    const safeReviews = Array.isArray(reviews) ? reviews : [];
 
     return (
         <section className='p-5 m-5 bg-white rounded-lg'>
@@ -31,10 +32,10 @@ function ReviewComponent({ reviews, productId, hasPurchased }: reviewProps) {
 
             {/* reviews list */}
             <div className='mb-5 flex flex-col space-y-2'>
-                {reviews.length < 1 && (
+                {safeReviews.length < 1 && (
                     <h4 className='font-semibold text-lg text-gray-500'>No reviews yet</h4>
                 )}
-                {reviews.map((r) => (
+                {safeReviews.map((r) => (
                     <div key={r.id} className='p-4 bg-gray-100 rounded-sm'>
                         <div className='flex items-center gap-3'>
                             <h4 className='font-semibold text-lg'>{r.user_name}</h4>

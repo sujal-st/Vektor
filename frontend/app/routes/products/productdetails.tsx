@@ -29,7 +29,8 @@ export async function loader({ params, request }: Route.LoaderArgs) {
 
     const data: ProductType = await productRes.json();
     const similarProducts: ProductType[] = await similarRes.json();
-    const reviewData = await reviewRes.json();
+    const reviewPayload = await reviewRes.json();
+    const reviewData = reviewRes.ok && Array.isArray(reviewPayload) ? reviewPayload : [];
 
     // check if user has purchased this product
     let hasPurchased = false;
@@ -47,7 +48,7 @@ export async function loader({ params, request }: Route.LoaderArgs) {
 
     return { data, similarProducts, reviewData, hasPurchased };
   } catch (err) {
-    return { product: null, similarProducts: [], reviewData: [], hasPurchased: false };
+    return { data: null, similarProducts: [], reviewData: [], hasPurchased: false };
   }
 }
 
@@ -89,9 +90,18 @@ export async function action({ request }: Route.ActionArgs) {
 }
 
 function productdetails({ loaderData }: Route.ComponentProps) {
-  const product: ProductType | undefined = loaderData?.data;
+  const product: ProductType | null | undefined = loaderData?.data;
   const similarProducts = loaderData?.similarProducts ?? [];
   const reviewData = loaderData?.reviewData;
+
+  if (!product) {
+    return (
+      <section className='max-w-5xl mx-auto p-5 text-center'>
+        <h1 className='text-2xl font-bold mb-3'>Product not found</h1>
+        <p className='text-gray-500'>This product is unavailable right now.</p>
+      </section>
+    )
+  }
 
   const shippingRules = [{ icon: <FaTruck size={20} />, text: 'Free Shipping', }, { icon: <FaSyncAlt size={20} />, text: '30 days return', }, { icon: <FaShieldAlt size={20} />, text: '2 years warranty', },]
 

@@ -14,11 +14,11 @@ function HeroSection() {
                         Browse, compare, and select from a wide range of CPUs, GPUs, RAM, storage, and more — all in one place.
                     </div>
                     <div className="flex gap-3 justify-center md:justify-start">
-                        <NavLink to="/signup" className='hover:cursor-pointer'>
-                            <button className="btn-primary">Get Started</button>
+                        <NavLink to="/signup" >
+                            <button className="btn-primary cursor-pointer" >Get Started</button>
                         </NavLink>
-                        <NavLink to="products" className='cursor-pointer'>
-                            <button className="btn-secondary">View Components</button>
+                        <NavLink to="products" >
+                            <button className="btn-secondary cursor-pointer" >View Components</button>
                         </NavLink>
                     </div>
                 </div>
