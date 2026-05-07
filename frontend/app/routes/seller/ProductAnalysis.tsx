@@ -68,7 +68,7 @@ function ProductAnalysis() {
 
       {/* Top rule */}
       <div className="w-full h-[3px] bg-[#AB2320]" />
-      <button onClick={() => navigate(-1)} className='px-5 py-2 font-bold text-[#d32f2c] hover:text-[#9c120f] hover:scale-103 transition-all mt-5 ml-5 cursor-pointer'>
+      <button onClick={() => navigate(-1)} className='px-5 py-2 font-bold bg-[#AB2320] text-white rounded-md hover:bg-[#9c120f] hover:scale-103 transition-all mt-5 ml-5 cursor-pointer'>
         Go Back
       </button>
 

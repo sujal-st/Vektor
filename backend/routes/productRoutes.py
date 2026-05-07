@@ -43,6 +43,7 @@ def save_image(img) -> str:
 # helper to format product
 def format_product(product):
     product["id"] = str(product["_id"])
+    product["admin_id"] = str(product["admin_id"])
     del product["_id"]
     return product
 
@@ -60,12 +61,35 @@ def get_current_admin(credentials: HTTPAuthorizationCredentials = Depends(securi
     except JWTError:
         raise HTTPException(status_code=401, detail="Invalid token")
 
+# helper to get seller name
+def with_seller_data(extra_match: dict = None):
+    pipeline=[]
+    if extra_match:
+        pipeline.append({"$match": extra_match})
+    pipeline +=[
+            {
+                "$lookup":{
+                    "from": "users",
+                    "localField": "admin_id",
+                    "foreignField":"_id",
+                    "as": "seller"
+                }
+            },
+            {
+                "$addFields":{
+                    "seller_name": {"$arrayElemAt":["$seller.userName",0]}
+                }
+            },
+            {"$unset": "seller"}
+        ]
+    return pipeline
 
 # get all products (public - no auth needed)
 @router.get("/products")
 async def get_products():
     try:
-        products = await db.products.find().to_list(100)
+        pipeline = with_seller_data()
+        products = await db.products.aggregate(pipeline).to_list(100)
         return [format_product(p) for p in products]
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -74,7 +98,8 @@ async def get_products():
 @router.get("/products/my-products")
 async def get_my_products(admin=Depends(get_current_admin)):
     try:
-        products = await db.products.find({"admin_id": admin["id"]}).to_list(100)
+        pipeline = with_seller_data({"admin_id": ObjectId(admin["id"])})
+        products = await db.products.aggregate(pipeline).to_list(100)
         return [format_product(p) for p in products]
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -89,11 +114,11 @@ async def get_similar_products(id: str):
         if not product:
             raise HTTPException(status_code=404, detail="Product not found")
         
-        similar = await db.products.find({
+        pipeline = with_seller_data({
             "category": product["category"],
             "_id":{"$ne": ObjectId(id)}
-        }).to_list(4)
-
+        })
+        similar = await db.products.aggregate(pipeline).to_list(4)
         return [format_product(p) for p in similar]
     except HTTPException:
         raise
@@ -104,12 +129,12 @@ async def get_similar_products(id: str):
 @router.get("/products/{id}")
 async def get_product_by_id(id: str):
     try:
-        product = await db.products.find_one({"_id": ObjectId(id)})
+        pipeline = with_seller_data({"_id": ObjectId(id)})
+        results = await db.products.aggregate(pipeline).to_list(1)
         
-        if not product:
+        if not results:
             raise HTTPException(status_code=404, detail="Product not found")
-
-        return format_product(product) 
+        return format_product(results[0]) 
     except HTTPException:
         raise
     except Exception as e:
@@ -139,10 +164,11 @@ async def create_product(
             "stock": stock,
             "featured": featured,
             "img": img_url,
-            "admin_id": admin["id"]
+            "admin_id": ObjectId(admin["id"])
         }
 
         result = await db.products.insert_one(product)
+        product["admin_id"] = str(product["admin_id"])
         product["id"] = str(result.inserted_id)
         product.pop("_id", None)
         return {
@@ -165,7 +191,7 @@ async def delete_product(id: str, admin=Depends(get_current_admin)):
         if not product:
             raise HTTPException(status_code=404, detail="Product not found")
 
-        if product["admin_id"] != admin["id"]:
+        if product["admin_id"] != ObjectId(admin["id"]):
             raise HTTPException(status_code=403, detail="You can only delete your own products")
 
         deleted = await db.products.find_one_and_delete({"_id": ObjectId(id)})
@@ -198,7 +224,7 @@ async def update_product(
         if not product:
             raise HTTPException(status_code=404, detail="Product not found")
 
-        if product["admin_id"] != admin["id"]:
+        if product["admin_id"] != ObjectId(admin["id"]):
             raise HTTPException(status_code=403, detail="You can only edit your own products")
 
         updated_fields = {

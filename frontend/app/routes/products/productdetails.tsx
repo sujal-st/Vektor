@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react'
+import { Link } from 'react-router';
 import type { Route } from './+types/productdetails'
 import type { ProductType } from '~/types';
 import { FaShoppingCart, FaTruck, FaSyncAlt, FaShieldAlt, FaChevronLeft, FaChevronRight } from "react-icons/fa"
@@ -186,7 +187,7 @@ function productdetails({ loaderData }: Route.ComponentProps) {
   const hasPurchased = loaderData?.hasPurchased ?? false;
   return (
     <>
-      <p className='p-5 text-gray-500'>Home / Products / <b>{product.title}</b></p>
+      <p className='p-5 text-gray-500'><Link to="/" className='hover:text-black transition-all'>Home</Link>  / <Link to="/products" className='hover:text-black transition-colors'>Products</Link> / <b>{product.title}</b></p>
       <section className='max-w-full mx-auto mt-10 p-4 md:p-5 flex flex-col md:flex-row items-start gap-8 md:gap-16'>
 
         <div className='w-full md:w-1/2'>
@@ -197,6 +198,7 @@ function productdetails({ loaderData }: Route.ComponentProps) {
 
           <div className='flex flex-col gap-2'>
             <h1 className='font-semibold text-2xl md:text-4xl'>{product.title}</h1>
+            <p className='text-sm text-gray-500 font-semibold'>{product.seller_name}</p>
             <p className='text-base md:text-xl text-gray-500 line-clamp-2 md:line-clamp-1'>{product.description}</p>
           </div>
 

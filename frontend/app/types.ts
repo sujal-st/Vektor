@@ -6,6 +6,7 @@ export type ProductType={
     stock: number,
     featured: boolean;
     img:string;
+    seller_name: string;
     admin_id: string
     id:string;
 }
