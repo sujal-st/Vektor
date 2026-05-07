@@ -42,8 +42,10 @@ function Product({ product }: PropType) {
                 <img src={getImageUrl(product.img)} alt={product.title} className='w-full h-full object-contain' />
             </div>
             <div className='flex flex-col space-y-5'>
-
-                <h3 className='text-lg font-bold line-clamp-1 '>{product.title}</h3>
+                <div>
+                    <h3 className='text-lg font-bold line-clamp-1 '>{product.title}</h3>
+                    <p className='text-sm text-gray-500 font-semibold'>{product.seller_name}</p>
+                </div>
                 <p className='text-md text-gray-500 line-clamp-2'>{product.description}</p>
                 <div className='flex justify-between'>
                     <span className='px-2 py-1 text-sm text-white font-semibold rounded-sm bg-[#00878f]'>{product.category}</span>
@@ -54,7 +56,7 @@ function Product({ product }: PropType) {
                         (e) => {
                             e.stopPropagation();
                             e.preventDefault();
-                            
+
                             isInCart ?
                                 removeFromCart(product.id, getToken())
                                 : handleAddToCart(e)
