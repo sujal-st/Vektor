@@ -2,6 +2,7 @@ import { useLoaderData, useNavigate } from 'react-router'
 import type { Route } from './+types/orderdetails'
 import { FaCheckCircle, FaTruck, FaBox, FaClock, FaTimesCircle } from 'react-icons/fa'
 import { getImageUrl } from '~/utils/getImageUrl'
+import { Link } from 'react-router'
 
 type OrderItem = {
     id: string
@@ -103,10 +104,14 @@ function OrderDetails() {
                         })}
                     </p>
                 </div>
+                
+                <div className='flex flex-col space-y-2'>
+                <Link to="/products" className="bg-[#AB2320] px-1 py-2 text-[#ffffff] font-semibold rounded-lg">Back to prodcuts list</Link>
                 <span className={`flex items-center gap-2 px-4 py-2 rounded-full font-semibold text-sm capitalize ${statusColor[order.order_status]}`}>
                     {statusIcon[order.order_status]}
                     {order.order_status}
                 </span>
+                </div>
             </div>
 
             {/* order status tracker (hidden if cancelled) */}

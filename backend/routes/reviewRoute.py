@@ -12,6 +12,7 @@ import openpyxl
 import pandas as pd
 import sys
 from pathlib import Path
+import math
 
 # Add backend directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -70,6 +71,59 @@ async def has_purchased(user_id: str, product_id: str) -> bool:
     })
     return order is not None
 
+# product ranking logic
+def wilson_score(pos: int,neg: int,total:int, confidence: float=0.95)->float:
+    if total==0:
+        return 0
+    
+    z=1.96
+    p_pro= pos/total
+    numerator=(
+        p_pro +
+        ((z**2)/(2*total))-
+        z * math.sqrt((p_pro*(1-p_pro)/total)+((z**2)/(4*(total**2))))
+    )
+    denominator = 1+((z**2)/total)
+    score = numerator/denominator
+    return score
+
+# updating the products collection with wilson_score and average_rating
+async def update_product_score(product_id: str):
+    try:
+        model, idf = get_trained_model()
+
+        reviews = await db.reviews.find({"_id":ObjectId(product_id)}).to_list(None)
+
+        if not reviews:
+            await db.products.update_one(
+                {"_id": ObjectId(product_id)},
+                {"$set": {"wilson_score": 0, "average_rating": 0, "updated_at": datetime.utcnow()}}
+            )
+            return
+        
+        sentiments = []
+        for review in reviews:
+            cleaned_words = clean_text(review["text"])
+            sentiment = model.predict(cleaned_words, idf)
+            sentiments.append(sentiment)
+
+        sentiment_series = pd.Series(sentiments)
+        sentiment_counts = sentiment_series.value_counts()
+        pos = int(sentiment_counts.get('positive', 0))
+        neg = int(sentiment_counts.get('negative', 0))
+        total = len(sentiments)
+        wilson = wilson_score(pos=pos, neg=neg, total=total)
+
+        await db.products.update_one(
+            {"_id": ObjectId(product_id)},
+            {"$set": {
+                "wilson_score": round(wilson,3),
+                "average_rating": round(sum(r["rating"] for r in reviews) / total, 2),
+                "updated_at": datetime.utcnow()
+            }}
+        )
+    except Exception as e:
+        print(f"Failed to update product score for {product_id}: {str(e)}")
 
 # post a review
 @router.post("/reviews")
@@ -124,6 +178,9 @@ async def post_review(review: ReviewSchema, user=Depends(get_current_user)):
         new_review["id"] = str(result.inserted_id)
         await save_review_to_excel(new_review)
 
+        await update_product_score(review.product_id)
+
+
         return {"message": "Review posted successfully", "review": new_review}
 
     except HTTPException:
@@ -167,6 +224,7 @@ async def delete_review(review_id: str, user=Depends(get_current_user)):
             raise HTTPException(status_code=403, detail="Not authorized to delete this review")
 
         await db.reviews.delete_one({"_id": ObjectId(review_id)})
+        await update_product_score(review["product_id"])
         return {"message": "Review deleted successfully"}
 
     except HTTPException:
@@ -297,6 +355,8 @@ async def analyze_product_sentiment(product_id: str):
         neg = int(sentiment_counts.get('negative', 0))
         neu = int(sentiment_counts.get('neutral', 0))
 
+        wilson = wilson_score(pos=pos, neg=neg, total=total)
+
         return {
             "product_id": product_id,
             "total_reviews": total,
@@ -306,9 +366,12 @@ async def analyze_product_sentiment(product_id: str):
             "positive_pct": round((pos / total) * 100, 2) if total > 0 else 0.0,
             "negative_pct": round((neg / total) * 100, 2) if total > 0 else 0.0,
             "neutral_pct": round((neu / total) * 100, 2) if total > 0 else 0.0,
+            "wilson_score": wilson,
         }
 
     except HTTPException:
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Sentiment analysis failed: {str(e)}")
+
+
