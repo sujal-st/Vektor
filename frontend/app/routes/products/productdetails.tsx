@@ -18,9 +18,22 @@ import { getImageUrl } from '~/utils/getImageUrl';
 // in loader, also fetch user's orders to check if they purchased
 export async function loader({ params, request }: Route.LoaderArgs) {
   const id = params.id;
+  let currentUserId: string | undefined;
   try {
+
+    
     const cookieHeader = request.headers.get('Cookie') ?? '';
     const token = cookieHeader.split(';').find(c => c.trim().startsWith('token='))?.split('=')[1];
+    const userCookie = cookieHeader.split(';').find(c => c.trim().startsWith('user='));
+    const userRaw = userCookie? userCookie.split("=").slice(1).join("="): undefined;
+
+    
+    if(userRaw){
+      try{
+        const payload = JSON.parse(decodeURIComponent(userRaw));
+        currentUserId = payload.id;
+      }catch{}
+    }
 
     const [productRes, similarRes, reviewRes] = await Promise.all([
       fetch(`${import.meta.env.VITE_API_URL}/api/products/${id}`),
@@ -47,47 +60,75 @@ export async function loader({ params, request }: Route.LoaderArgs) {
       }
     }
 
-    return { data, similarProducts, reviewData, hasPurchased };
+    return { data, similarProducts, reviewData, hasPurchased, currentUserId };
   } catch (err) {
     return { data: null, similarProducts: [], reviewData: [], hasPurchased: false };
   }
 }
 
 export async function action({ request }: Route.ActionArgs) {
-  const formData = await request.formData();
-  const intent = formData.get('intent');
+    const formData = await request.formData();
+    const intent = formData.get('intent');
 
-  if (intent === 'review') {
     const token = request.headers.get('Cookie')
-      ?.split(';')
-      .find(c => c.trim().startsWith('token='))
-      ?.split('=')[1];
+        ?.split(';')
+        .find(c => c.trim().startsWith('token='))
+        ?.split('=')[1];
 
-    if (!token) return { error: 'Login required to post a review' };
+    if (intent === 'review') {
+        if (!token) return { reviewError: 'Login required to post a review' };
 
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/reviews`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
-      },
-      body: JSON.stringify({
-        product_id: formData.get('product_id'),
-        text: formData.get('review'),
-        rating: Number(formData.get('rating'))
-      })
-    });
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/reviews`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                product_id: formData.get('product_id'),
+                text: formData.get('review'),
+                rating: Number(formData.get('rating'))
+            })
+        });
 
-    const data = await res.json();
-
-    if (!res.ok) {
-      return { reviewError: data.detail }
+        const data = await res.json();
+        if (!res.ok) return { reviewError: data.detail };
+        return { reviewSuccess: true };
     }
 
-    return { reviewSuccess: true }
-  }
+    if (intent === 'delete_review') {
+        if (!token) return { reviewError: 'Login required' };
 
-  return null;
+        const reviewId = formData.get('review_id');
+        await fetch(`${import.meta.env.VITE_API_URL}/api/reviews/${reviewId}`, {
+            method: 'DELETE',
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        return { reviewSuccess: true };
+    }
+
+    if (intent === 'edit_review') {
+        if (!token) return { reviewError: 'Login required' };
+
+        const reviewId = formData.get('review_id');
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/reviews/${reviewId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                text: formData.get('review'),
+                rating: Number(formData.get('rating'))
+            })
+        });
+
+        const data = await res.json();
+        if (!res.ok) return { reviewError: data.detail };
+        return { reviewSuccess: true };
+    }
+
+    return null;
 }
 
 function productdetails({ loaderData }: Route.ComponentProps) {
@@ -253,7 +294,7 @@ function productdetails({ loaderData }: Route.ComponentProps) {
         </p>
       </section>
 
-      <ReviewComponent reviews={reviewData} productId={product.id} hasPurchased={hasPurchased} />
+      <ReviewComponent reviews={reviewData} productId={product.id} hasPurchased={hasPurchased} currentUserId={loaderData?.currentUserId}/>
 
       <section className='p-5'>
         <h2 className="font-bold mb-5">You may also like</h2>
