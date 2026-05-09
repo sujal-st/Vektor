@@ -11,7 +11,8 @@ type ProductAnalysisLoaderData = {
     neutral: number,
     positive_pct: number,
     negative_pct: number,
-    neutral_pct: number
+    neutral_pct: number,
+    wilson_score: number
   } | null
 }
 
@@ -169,6 +170,15 @@ function ProductAnalysis() {
                 <SentimentBar pct={analysis.neutral_pct ?? 0} color="#f59e0b" />
               </div>
 
+              {/* wilson score */}
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.25em] text-gray-400 mb-1">
+                  Wilson Score
+                </p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {analysis.wilson_score.toFixed(2)}
+                </p>
+              </div>
             </div>
           ) : (
             <div className="bg-white border border-dashed border-gray-200 rounded-lg p-12 text-center">
