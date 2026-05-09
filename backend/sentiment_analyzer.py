@@ -67,8 +67,18 @@ def clean_text(text):
     text  = text.lower()
     text  = re.sub(r'[^a-z\s]', '', text)
     words = text.split()
-    words = [w for w in words if w not in stop_words]
-    return words
+    negations = {'not', 'no', 'never', 'nothing', 'nowhere', 'neither'}
+    processed = []
+    i = 0
+    while i < len(words):
+        if words[i] in negations and i + 1 < len(words):
+            processed.append(f"{words[i]}_{words[i+1]}")
+            i += 2  # skip the next word since it's been merged
+        else:
+            if words[i] not in stop_words:
+                processed.append(words[i])
+            i += 1
+    return processed
 
 
 # ─────────────────────────────────────────────

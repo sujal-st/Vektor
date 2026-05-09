@@ -21,6 +21,7 @@ function ProductMenu({ products }: Props) {
   const filteredProducts = products
     .filter((p) => cat === 'All' || p.category.toLowerCase() === cat.toLowerCase())
     .filter((p) => p.price>= priceRange[0] && p.price <= priceRange[1])
+    .sort((a,b)=>((b.wilson_score??0) - (a.wilson_score??0)))
 
 
   const { currentPage, setCurrentPage } = useContext(paginationContext);

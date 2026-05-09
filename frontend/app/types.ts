@@ -9,6 +9,8 @@ export type ProductType={
     seller_name: string;
     admin_id: string
     id:string;
+    avg_rating?:number;
+    wilson_score?:number;
 }
 export type UserType={
     id: string;

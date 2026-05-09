@@ -5,9 +5,11 @@ type InputPropType = {
     name: string;
     placeholder: string;
     className: string;
+    defaultValue?: string;
+    required?: boolean;
 }
 
-function InputComponent({ type, name, placeholder, className=" " }: InputPropType) {
+function InputComponent({ type, name, placeholder, className=" ", defaultValue, required = true }: InputPropType) {
     const capitalize = (str: string) => {
         if (!str) return "";
         return str[0].toUpperCase() + str.slice(1);
@@ -20,7 +22,8 @@ function InputComponent({ type, name, placeholder, className=" " }: InputPropTyp
                 name={name}
                 type={type}
                 placeholder={placeholder}
-                required
+                defaultValue={defaultValue}
+                required={required}
                 className={`border-[3px] border-white w-full rounded bg-[#FAF8F4] shadow py-[0.3rem] px-[1rem] focus:border-[#AB2320] outline-none`}
             />
         </div>

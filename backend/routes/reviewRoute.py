@@ -31,7 +31,9 @@ class ReviewSchema(BaseModel):
     product_id: str
     text: str
     rating: int  # 1-5
-
+class ReviewUpdateSchema(BaseModel):
+    text: str
+    rating: int
 def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
     try:
         if not credentials:
@@ -92,7 +94,7 @@ async def update_product_score(product_id: str):
     try:
         model, idf = get_trained_model()
 
-        reviews = await db.reviews.find({"_id":ObjectId(product_id)}).to_list(None)
+        reviews = await db.reviews.find({"product_id":product_id}).to_list(None)
 
         if not reviews:
             await db.products.update_one(
@@ -124,6 +126,7 @@ async def update_product_score(product_id: str):
         )
     except Exception as e:
         print(f"Failed to update product score for {product_id}: {str(e)}")
+
 
 # post a review
 @router.post("/reviews")
@@ -227,6 +230,56 @@ async def delete_review(review_id: str, user=Depends(get_current_user)):
         await update_product_score(review["product_id"])
         return {"message": "Review deleted successfully"}
 
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+async def update_review_in_excel(review_id: str, new_text: str, new_rating: int):
+    if not os.path.exists(REVIEWS_XLSX_PATH):
+        return  # nothing to update if file doesn't exist
+    
+    wb = openpyxl.load_workbook(REVIEWS_XLSX_PATH)
+    sheet = wb.active
+
+    for row in sheet.iter_rows(min_row=2):  # skip header
+        if str(row[0].value).strip() == str(review_id).strip():
+            row[2].value = new_rating   # column index 2 = rating
+            row[3].value = new_text     # column index 3 = text
+            break  # stop after finding the matching row
+
+    wb.save(REVIEWS_XLSX_PATH)
+
+
+# edit review
+@router.put("/reviews/{review_id}")
+async def edit_review(review_id:str, body: ReviewUpdateSchema, user= Depends(get_current_user)):
+    try:
+        if not user:
+            raise HTTPException(status_code=401, detail="Login required")
+        
+        if body.rating < 1 or body.rating > 5:
+            raise HTTPException(status_code=400, detail="Rating must be between 1 and 5")
+        
+        review = await db.reviews.find_one({"_id": ObjectId(review_id)})
+        if not review:
+            raise HTTPException(status_code=404, detail="Review not found")
+        
+        if review["user_id"] != user["id"]:
+            raise HTTPException(status_code=403, detail="Not authorized to edit this review")
+
+        await db.reviews.update_one(
+            {"_id": ObjectId(review_id)},
+            {"$set": {
+                "text": body.text,
+                "rating": body.rating,
+                "updated_at": datetime.utcnow()
+            }}
+        )
+        await update_review_in_excel(review_id, body.text, body.rating)
+        await update_product_score(review["product_id"])
+        return {"message": "Review updated successfully"}
+    
     except HTTPException:
         raise
     except Exception as e:
