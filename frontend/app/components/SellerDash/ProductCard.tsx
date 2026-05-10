@@ -21,7 +21,7 @@ function ProductCard({ product }: ProductCardProps) {
     const navigate = useNavigate()
 
     return (
-        <Link to={`products-analysis/${product.id}`} className='flex items-center gap-3 p-3 border border-gray-100 rounded-lg hover:border-gray-300 transition'>
+        <Link to={`/seller/dashboard/products-analysis/${product.id}`} className='flex items-center gap-3 p-3 border border-gray-100 rounded-lg hover:border-gray-300 transition'>
             <img
                 src={getImageUrl(product.img)}
                 alt={product.title}

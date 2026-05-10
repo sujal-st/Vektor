@@ -44,7 +44,7 @@ type Product = {
     featured: boolean
 }
 
-type User = {
+export type User = {
     id: string
     userName: string
     email: string
@@ -262,8 +262,14 @@ function SellerDash() {
                             <div className='flex items-center gap-2'>
                                 <FaStore className='text-[#AB2320]' />
                                 <h2 className='font-bold text-lg'>My Products</h2>
+                                <p className='text-sm text-gray-500'>{products.length} listed</p>
                             </div>
-                            <span className='text-sm text-gray-500'>{products.length} listed</span>
+                            <span
+                                onClick={() => navigate('/seller/products')}
+                                className='text-sm text-[#AB2320] font-semibold cursor-pointer hover:underline transition-all'
+                            >
+                                View all products
+                            </span>
                         </div>
 
                         {products.length === 0 ? (
@@ -291,7 +297,13 @@ function SellerDash() {
                         <div className='flex items-center gap-2 mb-4'>
                             <FaShoppingBag className='text-[#AB2320]' />
                             <h2 className='font-bold text-lg'>Orders for My Products</h2>
-                            <span className='ml-auto text-sm text-gray-500'>{orders.length} orders</span>
+                            <div className='ml-auto'>
+                                <p
+                                    onClick={() => navigate('/seller/orders')}
+                                    className='text-sm text-[#AB2320] font-semibold cursor-pointer hover:underline transition-all'
+                                >View all orders</p>
+                                <span className='ml-auto text-sm text-gray-500'>{orders.length} orders</span>
+                            </div>
                         </div>
 
                         {orders.length === 0 ? (

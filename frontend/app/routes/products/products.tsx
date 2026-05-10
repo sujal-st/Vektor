@@ -4,6 +4,7 @@ import PriceFilter from '~/components/PriceFilter'
 import ProductMenu from '~/components/ProductMenu'
 import type { Route } from './+types/products'
 import type { ProductType } from '~/types';
+import SearchBar from '~/components/SearchBar';
 
 export async function loader({ request }: Route.LoaderArgs) {
   try {
@@ -26,6 +27,7 @@ function products({loaderData}:Route.ComponentProps) {
   return (
     <section>
       <Categories />
+      <SearchBar />
       <div className='mt-4 flex flex-col lg:flex-row gap-5'>
         <PriceFilter products={products}/>
         <ProductMenu products={products}/>
