@@ -12,6 +12,8 @@ export default [
         route('my-orders/:id', './routes/orders/orderDetails.tsx'),
         route('dashboard', './routes/dashboards/UserDash.tsx'),
         route('seller/dashboard', './routes/dashboards/SellerDash.tsx'),
+        route('seller/products', './routes/dashboards/Myproducts.tsx'),
+        route('seller/orders', './routes/dashboards/Orders.tsx'),
         route('seller/add-product', './routes/seller/AddProduct.tsx'),
         route('seller/dashboard/products-analysis/:id', './routes/seller/ProductAnalysis.tsx'),
         route('seller/orders/:id', './routes/seller/OrderDetail.tsx'),

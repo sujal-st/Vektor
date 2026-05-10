@@ -176,7 +176,7 @@ function ProductAnalysis() {
                   Wilson Score
                 </p>
                 <p className="text-2xl font-bold text-gray-900">
-                  {analysis.wilson_score.toFixed(2)}
+                  {analysis.wilson_score!= null?analysis.wilson_score.toFixed(2): '0.00'}
                 </p>
               </div>
             </div>
