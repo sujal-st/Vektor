@@ -20,17 +20,19 @@ export async function loader({ request }: Route.LoaderArgs) {
   }
 }
 
-function products({loaderData}:Route.ComponentProps) {
+function products({ loaderData }: Route.ComponentProps) {
   // console.log("loaderdata:"+typeof(loaderData))
   const products = loaderData?.products ?? [];
   console.log(products)
   return (
     <section>
       <Categories />
-      <SearchBar />
+      <div className='sticky top-20 z-50 bg-[#F6F1E6] pt-2'>
+        <SearchBar />
+      </div>
       <div className='mt-4 flex flex-col lg:flex-row gap-5'>
-        <PriceFilter products={products}/>
-        <ProductMenu products={products}/>
+        <PriceFilter products={products} />
+        <ProductMenu products={products} />
       </div>
     </section>
   )

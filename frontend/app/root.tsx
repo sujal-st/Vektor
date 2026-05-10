@@ -17,6 +17,7 @@ import type { CartType } from "./types";
 import { useLoaderData } from "react-router";
 import { useEffect } from "react";
 import { cookieContext, CookieProvider } from "./contexts/cookieContext";
+import { searchContext,SearchProvider } from "./contexts/searchContext";
 import { Toaster } from 'sonner'
 
 
@@ -103,10 +104,12 @@ export default function App() {
  
   return (
     <CookieProvider>
-    <CartProvider initialCart={cart} >
-      <AppInner />
-      <Toaster position='top-right' theme='light'/>
-    </CartProvider>
+    <SearchProvider>
+      <CartProvider initialCart={cart} >
+        <AppInner />
+        <Toaster position='top-right' theme='light'/>
+      </CartProvider>
+    </SearchProvider>
     </CookieProvider>
   );
 }

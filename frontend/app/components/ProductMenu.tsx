@@ -4,6 +4,7 @@ import PaginationButon from './PaginationButon';
 import { categoryContext } from '~/contexts/categoryContext';
 import { filterContext } from '~/contexts/resetFilterContext';
 import { paginationContext } from '~/contexts/paginationContext';
+import {searchContext} from '~/contexts/searchContext';
 import { NavLink } from 'react-router';
 import type { ProductType } from '~/types';
 
@@ -17,10 +18,12 @@ function ProductMenu({ products }: Props) {
 
   const { cat } = useContext(categoryContext);
   const { priceRange } = useContext(filterContext);
+  const {query} = useContext(searchContext);
 
   const filteredProducts = products
     .filter((p) => cat === 'All' || p.category.toLowerCase() === cat.toLowerCase())
     .filter((p) => p.price>= priceRange[0] && p.price <= priceRange[1])
+    .filter((p)=>query.trim()===''||p.title.toLowerCase().includes(query.toLowerCase()))
     .sort((a,b)=>((b.wilson_score??0) - (a.wilson_score??0)))
 
 

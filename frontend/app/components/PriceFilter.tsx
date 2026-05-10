@@ -28,7 +28,7 @@ function PriceFilter({products}:Props) {
         <>
             {/* Mobile toggle button */}
             <button
-                className='lg:hidden sticky top-10 h-fit w-full rounded-sm px-4 py-2 font-semibold bg-white border border-gray-200 flex justify-between items-center'
+                className='lg:hidden sticky top-25 h-fit w-full rounded-sm px-4 py-2 font-semibold bg-white border border-gray-200 flex justify-between items-center'
                 onClick={() => setIsOpen(!isOpen)}
             >
                 <span>Filter By Price</span>
@@ -38,7 +38,7 @@ function PriceFilter({products}:Props) {
             {/* Filter panel */}
             <div className={`
                 lg:py-12 lg:px-5 lg:rounded-sm lg:bg-white md:min-w-[20%] lg:max-h-fit 
-                lg:flex lg:flex-col lg:items-start lg:space-y-5 lg:sticky lg:top-20
+                lg:flex lg:flex-col lg:items-start lg:space-y-5 lg:sticky lg:top-45
                 ${isOpen ? 'flex' : 'hidden'} lg:flex
                 flex-col items-start gap-4 py-4 px-4 bg-white rounded-sm w-fit
             `}>
